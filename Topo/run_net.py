@@ -16,9 +16,9 @@ import utils
 
 k = 4
 
-def run_pox(controller_name):
+def run_pox(controller_name, num):
 	p_pox = Popen(
-		['/home/mininet/pox/pox.py', 'fakearp', controller_name, '--num=%d'%k],
+		['/home/mininet/pox/pox.py', 'fakearp', controller_name, '--num=%d'%num],
 		# make pox ignore sigint so we can ctrl-c mininet stuff without killing pox
 		preexec_fn=lambda: signal.signal(signal.SIGINT, signal.SIG_IGN)
 	)
@@ -34,11 +34,14 @@ if __name__ == '__main__':
 	k = int(sys.argv[2])
 
 	if topo_name == "hierarchy":
-		run_pox('controller_dj')
+		run_pox('controller_dj', k)
 		topo = HierarchyTopo(k)
 	elif topo_name == "fattree":
-		run_pox('controller_2level')
+		run_pox('controller_2level', k)
 		topo = FatTreeTopo(k)
+	elif topo_name == "direct":
+		run_pox('controller_direct', k)
+		topo = DirectTopo(k)
 	else:
 		print("topo not support")
 		sys.exit()

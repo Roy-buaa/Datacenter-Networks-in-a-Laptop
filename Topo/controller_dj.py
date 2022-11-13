@@ -105,8 +105,14 @@ class route_dj(object):
         DijkstraSwitch(event.connection, event.dpid, self.topo)
 
 
-def launch(num=None):
-    topo = topo_ft.HierarchyTopo(int(num))
+def launch(num):
+    n = int(num)
+    if n % 2 == 1:
+        print('direct')
+        print(n - 1)
+        topo = topo_ft.DirectTopo(n - 1)
+    else:
+        topo = topo_ft.HierarchyTopo(n)
 
     core.registerNew(install_dj, topo)
 

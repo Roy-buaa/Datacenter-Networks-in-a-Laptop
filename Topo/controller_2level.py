@@ -37,25 +37,25 @@ class install_2level(object):
     # install routes onto a core switch
     def install_core(self, connection, dpid, name):
         for pod in range(self.k):
-            self.add_route(connection, '10.%d.0.0'%pod, '255.255.0.0', pod+1)
+            self.add_route(connection, '10.%d.0.0'%pod, '255.255.0.0', pod + 1)
 
     # install routes onto a pod switch
     def install_pod(self, connection, dpid, name):
         pod, switch = topo_ft.pod_name_to_location(name)
         # upper layer pod switch
         if switch >= self.k // 2:
-            for subnet in range(self.k//2):
-                self.add_route(connection, '10.%d.%d.0'%(pod, subnet), '255.255.255.0', subnet+1)
+            for subnet in range(self.k // 2):
+                self.add_route(connection, '10.%d.%d.0'%(pod, subnet), '255.255.255.0', subnet + 1)
         # lower layer pod switch
         else:
-            for host in range(2, self.k//2 + 2):
-                self.add_route(connection, '10.%d.%d.%d'%(pod, switch, host), '255.255.255.255', host-1)
-        for host in range(2, self.k//2 + 2):
-            port =  (host - 2 + switch) % (self.k // 2) + (self.k // 2) + 1
+            for host in range(2, self.k // 2 + 2):
+                self.add_route(connection, '10.%d.%d.%d'%(pod, switch, host), '255.255.255.255', host - 1)
+        for host in range(2, self.k // 2 + 2):
+            port = (host - 2 + switch) % (self.k // 2) + (self.k // 2) + 1
             self.add_route(connection, '0.0.0.%d'%host, '0.0.0.255', port, 50)
 
 
-def launch(num=None):
+def launch(num):
     topo = topo_ft.FatTreeTopo(int(num))
 
     core.registerNew(install_2level, topo)
